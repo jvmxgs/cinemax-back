@@ -16,17 +16,21 @@ class AuthController extends ApiController
      */
     public function login(LoginRequest $request)
     {
-        $user = User::where('email', $request->email)->first();
+        try {
+            $user = User::where('email', $request->email)->first();
 
-        if (! $user || ! Hash::check($request->password, $user->password)) {
-            return $this->errorResponse('Invalid credentials', 401);
+            if (! $user || ! Hash::check($request->password, $user->password)) {
+                return $this->errorResponse('Invalid credentials', 401);
+            }
+
+            $token = $user->createToken('auth_token')->plainTextToken;
+
+            return $this->successResponseWithData('Login successfully', [
+                'access_token' => $token,
+                'token_type' => 'Bearer'
+            ]);
+        } catch (\Exception $e) {
+            return $this->errorResponse('Something went wrong', 500);
         }
-
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        return $this->successResponseWithData([
-            'access_token' => $token,
-            'token_type' => 'Bearer'
-        ]);
     }
 }

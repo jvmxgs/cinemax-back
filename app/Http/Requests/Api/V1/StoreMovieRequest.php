@@ -11,7 +11,7 @@ class StoreMovieRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,10 +23,10 @@ class StoreMovieRequest extends FormRequest
     {
         return [
             'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'director' => 'nullable|string|max:255',
-            'release_year' => 'nullable|integer|min:1800|max:' . (date('Y') + 1),
-            'genre' => 'nullable|string|max:255',
+            'description' => 'required|nullable|string',
+            'director' => 'required|nullable|string|max:255',
+            'release_year' => 'required|nullable|integer|min:1800|max:' . (date('Y') + 1),
+            'genre' => 'required|nullable|string|max:255',
         ];
     }
 }

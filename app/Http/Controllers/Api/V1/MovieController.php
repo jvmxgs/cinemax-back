@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\StoreMovieRequest;
 use App\Http\Requests\Api\V1\UpdateMovieRequest;
 use App\Http\Resources\Api\V1\MovieResource;
 use App\Models\Movie;
 use Illuminate\Http\Response;
 
-class MovieController extends Controller
+class MovieController extends ApiController
 {
 
     /**
@@ -17,7 +16,14 @@ class MovieController extends Controller
      */
     public function index()
     {
-        return MovieResource::collection(Movie::all());
+        try {
+            return $this->successResponseWithData(
+                'Movies retrieved successfully',
+                MovieResource::collection(Movie::all())
+            );
+        } catch (\Exception $e) {
+            return $this->handleException($e);
+        }
     }
 
     /**
@@ -25,33 +31,67 @@ class MovieController extends Controller
      */
     public function store(StoreMovieRequest $request)
     {
-        $movie = Movie::create($request->validated());
-        return new MovieResource($movie);
+        try {
+            $movie = Movie::create($request->validated());
+
+            return $this->successResponseWithData(
+                'Movie created successfully',
+                new MovieResource($movie)
+            );
+        } catch(\Exception $e) {
+            return $this->handleException($e);
+        }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Movie $movie)
+    public function show($movie)
     {
-        return new MovieResource($movie);
+        try {
+            $movie = Movie::findOrFail($movie);
+
+            return $this->successResponseWithData(
+                'Movie retrieved successfully',
+                new MovieResource($movie)
+            );
+        } catch (\Exception $e) {
+            return $this->handleException($e);
+        }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateMovieRequest $request, Movie $movie)
+    public function update(UpdateMovieRequest $request, $movie)
     {
-        $movie->update($request->validated());
-        return new MovieResource($movie);
+        try {
+            $movie = Movie::findOrFail($movie);
+            $movie->update($request->validated());
+
+            return $this->successResponseWithData(
+                'Movie updated successfully',
+                new MovieResource($movie)
+            );
+        } catch (\Exception $e) {
+            return $this->handleException($e);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Movie $movie)
+    public function destroy($movie)
     {
-        $movie->delete();
-        return response(null, Response::HTTP_NO_CONTENT);
+        try {
+            $movie = Movie::findOrFail($movie);
+            $movie->delete();
+
+            return $this->successResponse(
+                'Movie deleted successfully'
+            );
+        } catch (\Exception $e) {
+            return $this->handleException($e);
+        }
     }
 }
