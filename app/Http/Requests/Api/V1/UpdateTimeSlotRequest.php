@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Api\V1;
 
+use App\Rules\UniqueTimeSlot;
 use App\Rules\ValidTimeSlot;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -23,7 +24,7 @@ class UpdateTimeSlotRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'start_time' => ['date_format:H:i:s', new ValidTimeSlot],
+            'start_time' => ['date_format:H:i:s', new ValidTimeSlot, new UniqueTimeSlot],
             'is_active' => 'boolean',
             'movie_id' => 'exists:movies,id',
         ];
