@@ -35,7 +35,8 @@ class MovieController extends ApiController
 
             return $this->successResponseWithData(
                 'Movie created successfully',
-                new MovieResource($movie)
+                new MovieResource($movie),
+                201
             );
         } catch(\Exception $e) {
             return $this->handleException($e);
