@@ -17,7 +17,7 @@ class TimeSlotController extends ApiController
         try {
             return $this->successResponseWithData(
                 'Time slots retrieved successfully',
-                TimeSlotResource::collection(TimeSlot::with('movie')->get())
+                TimeSlotResource::collection(TimeSlot::get())
             );
         } catch (\Exception $e) {
             return $this->handleException($e);
@@ -45,14 +45,14 @@ class TimeSlotController extends ApiController
     /**
      * Display the specified time slot.
      */
-    public function show($movieId)
+    public function show($timeSlotId)
     {
         try {
-            $timeSlot = TimeSlot::findOrFail($movieId);
+            $timeSlot = TimeSlot::findOrFail($timeSlotId);
 
             return $this->successResponseWithData(
                 'Time slot retrieved successfully',
-                new TimeSlotResource($timeSlot->load('movie'))
+                new TimeSlotResource($timeSlot)
             );
         } catch (\Exception $e) {
             return $this->handleException($e);
@@ -62,10 +62,10 @@ class TimeSlotController extends ApiController
     /**
      * Update the specified time slot in storage.
      */
-    public function update(UpdateTimeSlotRequest $request, $movieId)
+    public function update(UpdateTimeSlotRequest $request, $timeSlotId)
     {
         try {
-            $timeSlot = TimeSlot::findOrFail($movieId);
+            $timeSlot = TimeSlot::findOrFail($timeSlotId);
             $timeSlot->update($request->validated());
 
             return $this->successResponseWithData(
@@ -80,10 +80,10 @@ class TimeSlotController extends ApiController
     /**
      * Remove the specified time slot from storage.
      */
-    public function destroy($movieId)
+    public function destroy($timeSlotId)
     {
         try {
-            $timeSlot = TimeSlot::findOrFail($movieId);
+            $timeSlot = TimeSlot::findOrFail($timeSlotId);
             $timeSlot->delete();
 
             return $this->successResponse(

@@ -31,7 +31,7 @@ class UniqueTimeSlot implements ValidationRule
             ->exists();
 
         if ($conflictingTimeSlot) {
-            $fail('The :attribute conflicts with an existing time slot or does not respect the minimum interval.');
+            $fail('The :attribute conflicts with an existing time slot or does not respect the minimum interval of 59 mins.');
         }
     }
 }

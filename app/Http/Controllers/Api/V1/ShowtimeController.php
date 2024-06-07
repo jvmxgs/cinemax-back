@@ -45,10 +45,10 @@ class ShowtimeController extends ApiController
     /**
      * Display the specified showtime.
      */
-    public function show($movieId)
+    public function show($showtimeId)
     {
         try {
-            $showtime = Showtime::findOrFail($movieId);
+            $showtime = Showtime::findOrFail($showtimeId);
 
             return $this->successResponseWithData(
                 'Showtime retrieved successfully',
@@ -62,10 +62,10 @@ class ShowtimeController extends ApiController
     /**
      * Update the specified showtime in storage.
      */
-    public function update(UpdateShowtimeRequest $request, $movieId)
+    public function update(UpdateShowtimeRequest $request, $showtimeId)
     {
         try {
-            $showtime = Showtime::findOrFail($movieId);
+            $showtime = Showtime::findOrFail($showtimeId);
             $showtime->update($request->validated());
 
             return $this->successResponseWithData(
@@ -80,10 +80,10 @@ class ShowtimeController extends ApiController
     /**
      * Remove the specified showtime from storage.
      */
-    public function destroy($movieId)
+    public function destroy($showtimeId)
     {
         try {
-            $showtime = Showtime::findOrFail($movieId);
+            $showtime = Showtime::findOrFail($showtimeId);
             $showtime->delete();
 
             return $this->successResponse(

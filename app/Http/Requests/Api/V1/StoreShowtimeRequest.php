@@ -25,7 +25,7 @@ class StoreShowtimeRequest extends FormRequest
             'movie_id' => 'required|exists:movies,id',
             'time_slot_id' => 'required|exists:time_slots,id',
             'start_date' => 'required|date',
-            'end_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
         ];
     }
 }

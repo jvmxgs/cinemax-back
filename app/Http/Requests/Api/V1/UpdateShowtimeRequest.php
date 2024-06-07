@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Api\V1;
 
+use App\Rules\ValidEndDateRange;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateShowtimeRequest extends FormRequest
@@ -21,11 +22,13 @@ class UpdateShowtimeRequest extends FormRequest
      */
     public function rules(): array
     {
+        $showtime_id = $this->route('showtime');
+
         return [
             'movie_id' => 'exists:movies,id',
             'time_slot_id' => 'exists:time_slots,id',
             'start_date' => 'date',
-            'end_date' => 'date',
+            'end_date' => ['date', 'after_or_equal:start_date', new ValidEndDateRange($showtime_id)],
         ];
     }
 }
