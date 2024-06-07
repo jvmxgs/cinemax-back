@@ -3,12 +3,13 @@
 namespace Tests\Feature;
 
 use App\Models\Movie;
+use App\Models\Showtime;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class MovieControllerTest extends TestCase
+class ShowtimeControllerTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
@@ -29,12 +30,12 @@ class MovieControllerTest extends TestCase
      *
      * @return void
      */
-    public function test_can_list_movies()
+    public function test_can_list_showtimes()
     {
-        Movie::factory()->count(3)->create();
+        Showtime::factory()->count(3)->create();
 
         $response = $this->actingAs($this->user)
-            ->getJson('/api/v1/movies');
+            ->getJson('/api/v1/showtimes');
 
         $response->assertStatus(200)
             ->assertJsonStructure([
@@ -42,8 +43,8 @@ class MovieControllerTest extends TestCase
                 'data' => [
                     '*' => [
                         'id',
-                        'title',
-                        'description',
+                        'movie',
+                        'showtime',
                         'created_at',
                         'updated_at',
                     ],
@@ -56,32 +57,31 @@ class MovieControllerTest extends TestCase
      *
      * @return void
      */
-    public function test_can_create_movie()
+    public function test_can_create_showtime()
     {
+        $movie = Movie::factory()->create();
+
         $data = [
-            'title' => $this->faker->sentence(3),
-            'description' => $this->faker->paragraph,
-            'director' => $this->faker->name,
-            'release_year' => $this->faker->year,
-            'genre' => $this->faker->word,
+            'movie_id' => $movie->id,
+            'showtime' => $this->faker->dateTimeBetween('now', '+1 year')->format('Y-m-d H:i:s'),
         ];
 
         $response = $this->actingAs($this->user)
-            ->postJson('/api/v1/movies', $data);
+            ->postJson('/api/v1/showtimes', $data);
 
         $response->assertStatus(201)
             ->assertJsonStructure([
                 'message',
                 'data' => [
                     'id',
-                    'title',
-                    'description',
+                    'movie',
+                    'showtime',
                     'created_at',
                     'updated_at',
                 ],
             ]);
 
-        $this->assertDatabaseHas('movies', $data);
+        $this->assertDatabaseHas('showtimes', $data);
     }
 
     /**
@@ -89,20 +89,20 @@ class MovieControllerTest extends TestCase
      *
      * @return void
      */
-    public function test_can_show_movie()
+    public function test_can_show_showtime()
     {
-        $movie = Movie::factory()->create();
+        $showtime = Showtime::factory()->create();
 
         $response = $this->actingAs($this->user)
-            ->getJson("/api/v1/movies/{$movie->id}");
+            ->getJson("/api/v1/showtimes/{$showtime->id}");
 
         $response->assertStatus(200)
             ->assertJsonStructure([
                 'message',
                 'data' => [
                     'id',
-                    'title',
-                    'description',
+                    'movie',
+                    'showtime',
                     'created_at',
                     'updated_at',
                 ],
@@ -114,43 +114,38 @@ class MovieControllerTest extends TestCase
      *
      * @return void
      */
-    public function test_can_update_movie()
+    public function test_can_update_showtime()
     {
-        $movie = Movie::factory()->create([
-            'title' => 'Original Title',
-            'description' => 'Original Description',
+        $firstMovie = Movie::factory()->create();
+        $secondMovie = Movie::factory()->create();
+
+        $showtime = Showtime::factory()->create([
+            'movie_id' => $firstMovie->id,
+            'showtime' => $this->faker->dateTimeBetween('now', '+1 year')->format('Y-m-d H:i:s')
         ]);
 
         $data = [
-            'title' => 'Updated Title',
-            'description' => 'Updated Description',
-            'director' => 'Updated Director',
-            'release_year' => '2022',
-            'genre' => 'Updated Genre',
+            'movie_id' => $secondMovie->id
         ];
 
         $response = $this->actingAs($this->user)
-                        ->putJson("/api/v1/movies/{$movie->id}", $data);
+                        ->putJson("/api/v1/showtimes/{$showtime->id}", $data);
 
         $response->assertStatus(200)
                 ->assertJsonStructure([
                     'message',
                     'data' => [
                         'id',
-                        'title',
-                        'description',
+                        'movie',
+                        'showtime',
                         'created_at',
                         'updated_at',
                     ],
                 ]);
 
-        $this->assertDatabaseHas('movies', [
-            'id' => $movie->id,
-            'title' => 'Updated Title',
-            'description' => 'Updated Description',
-            'director' => 'Updated Director',
-            'release_year' => '2022',
-            'genre' => 'Updated Genre',
+        $this->assertDatabaseHas('showtimes', [
+            'id' => $showtime->id,
+            'movie_id' => $secondMovie->id
         ]);
     }
 
@@ -159,20 +154,20 @@ class MovieControllerTest extends TestCase
      *
      * @return void
      */
-    public function test_can_delete_movie()
+    public function test_can_delete_showtime()
     {
-        $movie = Movie::factory()->create();
+        $showtime = Showtime::factory()->create();
 
         $response = $this->actingAs($this->user)
-            ->deleteJson("/api/v1/movies/{$movie->id}");
+            ->deleteJson("/api/v1/showtimes/{$showtime->id}");
 
         $response->assertStatus(200)
             ->assertJson([
-                'message' => 'Movie deleted successfully',
+                'message' => 'Showtime deleted successfully',
             ]);
 
-        $this->assertSoftDeleted('movies', [
-            'id' => $movie->id,
+        $this->assertSoftDeleted('showtimes', [
+            'id' => $showtime->id,
         ]);
     }
 
@@ -183,7 +178,7 @@ class MovieControllerTest extends TestCase
      */
     public function test_unauthorized_access_to_index()
     {
-        $response = $this->getJson('/api/v1/movies');
+        $response = $this->getJson('/api/v1/showtimes');
 
         $response->assertStatus(401);
     }
@@ -195,12 +190,13 @@ class MovieControllerTest extends TestCase
      */
     public function test_unauthorized_access_to_store()
     {
+        $movie = Movie::factory()->create();
+
         $data = [
-            'title' => $this->faker->sentence(3),
-            'description' => $this->faker->paragraph,
+            'movie' => $movie->id
         ];
 
-        $response = $this->postJson('/api/v1/movies', $data);
+        $response = $this->postJson('/api/v1/showtimes', $data);
 
         $response->assertStatus(401);
     }
@@ -213,10 +209,10 @@ class MovieControllerTest extends TestCase
     public function test_validation_error_on_store()
     {
         $response = $this->actingAs($this->user)
-                         ->postJson('/api/v1/movies', []);
+                         ->postJson('/api/v1/showtimes', []);
 
         $response->assertStatus(422)
-                 ->assertJsonValidationErrors(['title', 'description']);
+                 ->assertJsonValidationErrors(['movie_id', 'showtime']);
     }
 
     /**
@@ -226,9 +222,9 @@ class MovieControllerTest extends TestCase
      */
     public function test_unauthorized_access_to_show()
     {
-        $movie = Movie::factory()->create();
+        $showtime = Showtime::factory()->create();
 
-        $response = $this->getJson("/api/v1/movies/{$movie->id}");
+        $response = $this->getJson("/api/v1/showtimes/{$showtime->id}");
 
         $response->assertStatus(401);
     }
@@ -240,14 +236,14 @@ class MovieControllerTest extends TestCase
      */
     public function test_unauthorized_access_to_update()
     {
+        $showtime = Showtime::factory()->create();
         $movie = Movie::factory()->create();
 
         $data = [
-            'title' => 'Updated Title',
-            'description' => 'Updated Description',
+            'movie_id' => $movie->id,
         ];
 
-        $response = $this->putJson("/api/v1/movies/{$movie->id}", $data);
+        $response = $this->putJson("/api/v1/showtimes/{$showtime->id}", $data);
 
         $response->assertStatus(401);
     }
@@ -259,9 +255,9 @@ class MovieControllerTest extends TestCase
      */
     public function test_unauthorized_access_to_destroy()
     {
-        $movie = Movie::factory()->create();
+        $showtime = Showtime::factory()->create();
 
-        $response = $this->deleteJson("/api/v1/movies/{$movie->id}");
+        $response = $this->deleteJson("/api/v1/showtimes/{$showtime->id}");
 
         $response->assertStatus(401);
     }

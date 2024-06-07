@@ -34,7 +34,8 @@ class ShowtimeController extends ApiController
 
             return $this->successResponseWithData(
                 'Showtime created successfully',
-                new ShowtimeResource($showtime->load('movie'))
+                new ShowtimeResource($showtime->load('movie')),
+                201
             );
         } catch(\Exception $e) {
             return $this->handleException($e);
