@@ -20,7 +20,8 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             MovieSeeder::class,
-            TimeSlotSeeder::class
+            TimeSlotSeeder::class,
+            ShowTimeSeeder::class,
         ]);
     }
 }

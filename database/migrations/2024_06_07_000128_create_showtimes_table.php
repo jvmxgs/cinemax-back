@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::create('showtimes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('movie_id')->constrained('movies')->onDelete('cascade');
-            $table->dateTime('showtime');
+            $table->foreignId('time_slot_id')->constrained('time_slots')->onDelete('cascade');
+            $table->date('start_date');
+            $table->date('end_date');
             $table->timestamps();
             $table->softDeletes();
         });

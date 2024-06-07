@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Movie;
 use App\Models\Showtime;
+use App\Models\TimeSlot;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -44,7 +45,9 @@ class ShowtimeControllerTest extends TestCase
                     '*' => [
                         'id',
                         'movie',
-                        'showtime',
+                        'time_slot',
+                        'start_date',
+                        'end_date',
                         'created_at',
                         'updated_at',
                     ],
@@ -60,10 +63,13 @@ class ShowtimeControllerTest extends TestCase
     public function test_can_create_showtime()
     {
         $movie = Movie::factory()->create();
+        $timeSlot = TimeSlot::factory()->create();
 
         $data = [
             'movie_id' => $movie->id,
-            'showtime' => $this->faker->dateTimeBetween('now', '+1 year')->format('Y-m-d H:i:s'),
+            'time_slot_id' => $timeSlot->id,
+            'start_date' => $this->faker->dateTimeBetween('-1 week', 'now')->format('Y-m-d'),
+            'end_date' => $this->faker->dateTimeBetween('now', '+1 week')->format('Y-m-d')
         ];
 
         $response = $this->actingAs($this->user)
@@ -75,7 +81,9 @@ class ShowtimeControllerTest extends TestCase
                 'data' => [
                     'id',
                     'movie',
-                    'showtime',
+                    'time_slot',
+                    'start_date',
+                    'end_date',
                     'created_at',
                     'updated_at',
                 ],
@@ -102,7 +110,9 @@ class ShowtimeControllerTest extends TestCase
                 'data' => [
                     'id',
                     'movie',
-                    'showtime',
+                    'time_slot',
+                    'start_date',
+                    'end_date',
                     'created_at',
                     'updated_at',
                 ],
@@ -116,16 +126,12 @@ class ShowtimeControllerTest extends TestCase
      */
     public function test_can_update_showtime()
     {
-        $firstMovie = Movie::factory()->create();
-        $secondMovie = Movie::factory()->create();
+        $movie = Movie::factory()->create();
 
-        $showtime = Showtime::factory()->create([
-            'movie_id' => $firstMovie->id,
-            'showtime' => $this->faker->dateTimeBetween('now', '+1 year')->format('Y-m-d H:i:s')
-        ]);
+        $showtime = Showtime::factory()->create();
 
         $data = [
-            'movie_id' => $secondMovie->id
+           'movie_id' => $movie->id
         ];
 
         $response = $this->actingAs($this->user)
@@ -137,7 +143,9 @@ class ShowtimeControllerTest extends TestCase
                     'data' => [
                         'id',
                         'movie',
-                        'showtime',
+                        'time_slot',
+                        'start_date',
+                        'end_date',
                         'created_at',
                         'updated_at',
                     ],
@@ -145,7 +153,7 @@ class ShowtimeControllerTest extends TestCase
 
         $this->assertDatabaseHas('showtimes', [
             'id' => $showtime->id,
-            'movie_id' => $secondMovie->id
+            'movie_id' => $movie->id
         ]);
     }
 
@@ -190,13 +198,7 @@ class ShowtimeControllerTest extends TestCase
      */
     public function test_unauthorized_access_to_store()
     {
-        $movie = Movie::factory()->create();
-
-        $data = [
-            'movie' => $movie->id
-        ];
-
-        $response = $this->postJson('/api/v1/showtimes', $data);
+        $response = $this->postJson('/api/v1/showtimes', []);
 
         $response->assertStatus(401);
     }
@@ -212,7 +214,7 @@ class ShowtimeControllerTest extends TestCase
                          ->postJson('/api/v1/showtimes', []);
 
         $response->assertStatus(422)
-                 ->assertJsonValidationErrors(['movie_id', 'showtime']);
+                 ->assertJsonValidationErrors(['movie_id', 'time_slot_id', 'start_date', 'end_date']);
     }
 
     /**

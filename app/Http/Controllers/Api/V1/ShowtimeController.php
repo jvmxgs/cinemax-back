@@ -17,7 +17,7 @@ class ShowtimeController extends ApiController
         try {
             return $this->successResponseWithData(
                 'Showtimes retrieved successfully',
-                ShowtimeResource::collection(Showtime::with('movie')->get())
+                ShowtimeResource::collection(Showtime::with('movie', 'time_slot')->get())
             );
         } catch (\Exception $e) {
             return $this->handleException($e);
@@ -34,7 +34,7 @@ class ShowtimeController extends ApiController
 
             return $this->successResponseWithData(
                 'Showtime created successfully',
-                new ShowtimeResource($showtime->load('movie')),
+                new ShowtimeResource($showtime->load('movie', 'time_slot')),
                 201
             );
         } catch(\Exception $e) {
@@ -52,7 +52,7 @@ class ShowtimeController extends ApiController
 
             return $this->successResponseWithData(
                 'Showtime retrieved successfully',
-                new ShowtimeResource($showtime->load('movie'))
+                new ShowtimeResource($showtime->load('movie', 'time_slot'))
             );
         } catch (\Exception $e) {
             return $this->handleException($e);
@@ -70,7 +70,7 @@ class ShowtimeController extends ApiController
 
             return $this->successResponseWithData(
                 'Showtime updated successfully',
-                new ShowtimeResource($showtime->load('movie'))
+                new ShowtimeResource($showtime->load('movie', 'time_slot'))
             );
         } catch (\Exception $e) {
             return $this->handleException($e);

@@ -17,7 +17,9 @@ class ShowtimeResource extends JsonResource
         return [
             'id' => $this->id,
             'movie' => new MovieResource($this->whenLoaded('movie')),
-            'showtime' => $this->showtime,
+            'time_slot' => new TimeSlotResource($this->whenLoaded('time_slot')),
+            'start_date' => $this->start_date,
+            'end_date' => $this->end_date,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

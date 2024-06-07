@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Movie;
+use App\Models\TimeSlot;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,7 +20,9 @@ class ShowtimeFactory extends Factory
     {
         return [
             'movie_id' => Movie::factory(),
-            'showtime' => $this->faker->dateTimeBetween('now', '+1 year')
+            'time_slot_id' => TimeSlot::factory(),
+            'start_date' => $this->faker->dateTimeBetween('-1 week', 'now')->format('Y-m-d'),
+            'end_date' => $this->faker->dateTimeBetween('now', '+1 week')->format('Y-m-d')
         ];
     }
 }

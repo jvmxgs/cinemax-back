@@ -22,4 +22,9 @@ class Showtime extends Model
     {
         return $this->belongsTo(Movie::class);
     }
+
+    public function time_slot(): BelongsTo
+    {
+        return $this->belongsTo(TimeSlot::class);
+    }
 }

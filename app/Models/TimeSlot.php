@@ -16,9 +16,4 @@ class TimeSlot extends Model
      * @var array
      */
     protected $guarded = [];
-
-    public function movie()
-    {
-        return $this->belongsTo(Movie::class);
-    }
 }

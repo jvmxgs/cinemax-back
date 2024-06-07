@@ -23,7 +23,9 @@ class UpdateShowtimeRequest extends FormRequest
     {
         return [
             'movie_id' => 'exists:movies,id',
-            'showtime' => 'date',
+            'time_slot_id' => 'exists:time_slots,id',
+            'start_date' => 'date',
+            'end_date' => 'date',
         ];
     }
 }

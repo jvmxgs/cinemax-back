@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->time('start_time');
             $table->boolean('is_active')->default(true);
-            $table->foreignId('movie_id')->nullable()->constrained('movies')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });

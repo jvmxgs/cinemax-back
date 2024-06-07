@@ -23,7 +23,9 @@ class StoreShowtimeRequest extends FormRequest
     {
         return [
             'movie_id' => 'required|exists:movies,id',
-            'showtime' => 'required|date',
+            'time_slot_id' => 'required|exists:time_slots,id',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date',
         ];
     }
 }

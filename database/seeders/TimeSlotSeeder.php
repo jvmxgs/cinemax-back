@@ -18,13 +18,9 @@ class TimeSlotSeeder extends Seeder
         $startTime = Carbon::createFromTime(9, 0, 0); // 9:00 AM
         $endTime = Carbon::createFromTime(23, 0, 0);  // 11:00 PM
 
-        $faker = Faker::create();
-        $moviesCount = Movie::count();
-
         while ($startTime->lessThan($endTime)) {
             TimeSlot::factory()->create([
                 'start_time' => $startTime->format('H:i:00'),
-                'movie_id' => $faker->randomElement($moviesCount ? Movie::pluck('id')->toArray() : [null])
             ]);
 
             $interval = rand(10, 15) * 10;
