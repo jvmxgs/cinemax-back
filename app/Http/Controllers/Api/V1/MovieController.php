@@ -10,9 +10,8 @@ use Illuminate\Http\Response;
 
 class MovieController extends ApiController
 {
-
     /**
-     * Display a listing of the resource.
+     * Display a listing of movies.
      */
     public function index()
     {
@@ -27,7 +26,7 @@ class MovieController extends ApiController
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created movie in storage.
      */
     public function store(StoreMovieRequest $request)
     {
@@ -44,7 +43,7 @@ class MovieController extends ApiController
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified movie.
      */
     public function show($movie)
     {
@@ -61,7 +60,7 @@ class MovieController extends ApiController
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified movie in storage.
      */
     public function update(UpdateMovieRequest $request, $movie)
     {
@@ -79,7 +78,7 @@ class MovieController extends ApiController
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified movie from storage.
      */
     public function destroy($movie)
     {

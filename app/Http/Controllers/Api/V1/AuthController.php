@@ -30,7 +30,7 @@ class AuthController extends ApiController
                 'token_type' => 'Bearer'
             ]);
         } catch (\Exception $e) {
-            return $this->errorResponse('Something went wrong', 500);
+            return $this->handleException($e);
         }
     }
 }
