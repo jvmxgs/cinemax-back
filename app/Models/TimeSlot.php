@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Movie extends Model
+class TimeSlot extends Model
 {
     use HasFactory, SoftDeletes;
 
@@ -17,8 +17,8 @@ class Movie extends Model
      */
     protected $guarded = [];
 
-    public function timeSlots()
+    public function movie()
     {
-        return $this->hasMany(TimeSlot::class);
+        return $this->belongsTo(Movie::class);
     }
 }
