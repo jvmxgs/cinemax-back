@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Movie;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Http;
 
 class MovieSeeder extends Seeder
 {
@@ -12,6 +13,20 @@ class MovieSeeder extends Seeder
      */
     public function run(): void
     {
-        Movie::factory()->count(50)->create();
+        $movies = Movie::factory()->count(50)->create();
+
+        $this->command->info('Created sample movies.');
+
+        $this->command->info('Adding images to movies...');
+
+        $movies->each(function (Movie $movie) {
+            $randomImageUrl = config('services.random_image.url');
+            $response = Http::get($randomImageUrl);
+            $tempImagePath = storage_path('app/public/posters/' . $movie->id . '.jpg');
+
+            file_put_contents($tempImagePath, $response->body());
+
+            $movie->addMedia($tempImagePath)->toMediaCollection('poster', 'public');
+        });
     }
 }

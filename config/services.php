@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'random_image' => [
+        'url' => env('RANDOM_IMAGE_URL', 'https://picsum.photos/400/500?random=1'),
+    ],
+
 ];
