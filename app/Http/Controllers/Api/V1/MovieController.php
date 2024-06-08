@@ -31,7 +31,17 @@ class MovieController extends ApiController
     public function store(StoreMovieRequest $request)
     {
         try {
-            $movie = Movie::create($request->validated());
+            $movieData = $request->except('image');
+            $movie = Movie::create($movieData);
+
+            if ($request->hasFile('image')) {
+                $newFileName = 'poster.' . $request->file('image')->extension();
+
+                $movie
+                    ->addMediaFromRequest('image')
+                    ->usingFileName($newFileName)
+                    ->toMediaCollection('poster');
+            }
 
             return $this->successResponseWithData(
                 'Movie created successfully',
@@ -63,11 +73,17 @@ class MovieController extends ApiController
     /**
      * Update the specified movie in storage.
      */
-    public function update(UpdateMovieRequest $request, $movie)
+    public function update(UpdateMovieRequest $request, $movieId)
     {
         try {
-            $movie = Movie::findOrFail($movie);
-            $movie->update($request->validated());
+            $movieData = $request->except('image');
+
+            $movie = Movie::findOrFail($movieId);
+            $movie->update($movieData);
+
+            if ($request->hasFile('image')) {
+                $movie->addMediaFromRequest('image')->toMediaCollection('poster');
+            }
 
             return $this->successResponseWithData(
                 'Movie updated successfully',

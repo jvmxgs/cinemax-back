@@ -21,6 +21,7 @@ class MovieResource extends JsonResource
             'director' => $this->director,
             'release_year' => $this->release_year,
             'genre' => $this->genre,
+            'poster' => $this->getFirstMediaUrl('poster'),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

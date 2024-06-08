@@ -44,6 +44,9 @@ class MovieControllerTest extends TestCase
                         'id',
                         'title',
                         'description',
+                        'release_year',
+                        'genre',
+                        'poster',
                         'created_at',
                         'updated_at',
                     ],
@@ -64,6 +67,7 @@ class MovieControllerTest extends TestCase
             'director' => $this->faker->name,
             'release_year' => $this->faker->year,
             'genre' => $this->faker->word,
+            'image' => $this->faker->image()
         ];
 
         $response = $this->actingAs($this->user)
