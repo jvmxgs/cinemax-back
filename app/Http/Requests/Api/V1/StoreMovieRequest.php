@@ -27,7 +27,7 @@ class StoreMovieRequest extends FormRequest
             'director' => 'required|nullable|string|max:255',
             'release_year' => 'required|nullable|integer|min:1800|max:' . (date('Y') + 1),
             'genre' => 'required|nullable|string|max:255',
-            'image' => 'required|nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'poster' => 'required|nullable|image|mimes:jpg,jpeg,png|max:2048',
         ];
     }
 }

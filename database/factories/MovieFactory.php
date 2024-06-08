@@ -4,7 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Movie;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\Http;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -31,17 +31,11 @@ class MovieFactory extends Factory
     public function configure()
     {
         return $this->afterCreating(function (Movie $movie) {
-            if (!Storage::exists('public/posters')) {
-                Storage::makeDirectory('public/posters');
+            if (!Storage::exists('public')) {
+                Storage::makeDirectory('public');
             }
 
-            $url = 'https://source.unsplash.com/random/?movie';
-            $imageContents = Http::get($url)->body();
-
-            $imagePath = 'posters/' . $movie->id . '.jpg';
-            Storage::put('public/' . $imagePath, $imageContents);
-
-            $movie->addMedia($imagePath)->toMediaCollection('poster', 'public');
+            $movie->addMedia(UploadedFile::fake()->image('poster.jpg'))->toMediaCollection('poster', 'public');
         });
     }
 }

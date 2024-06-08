@@ -6,6 +6,7 @@ use App\Models\Movie;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
 
 class MovieControllerTest extends TestCase
@@ -44,6 +45,7 @@ class MovieControllerTest extends TestCase
                         'id',
                         'title',
                         'description',
+                        'director',
                         'release_year',
                         'genre',
                         'poster',
@@ -67,7 +69,7 @@ class MovieControllerTest extends TestCase
             'director' => $this->faker->name,
             'release_year' => $this->faker->year,
             'genre' => $this->faker->word,
-            'image' => $this->faker->image()
+            'poster' => UploadedFile::fake()->image('poster.jpg')
         ];
 
         $response = $this->actingAs($this->user)
@@ -80,12 +82,22 @@ class MovieControllerTest extends TestCase
                     'id',
                     'title',
                     'description',
+                    'director',
+                    'release_year',
+                    'genre',
+                    'poster',
                     'created_at',
-                    'updated_at',
+                    'updated_at'
                 ],
             ]);
 
-        $this->assertDatabaseHas('movies', $data);
+        $this->assertDatabaseHas('movies', [
+            'title' => $data['title'],
+            'description' => $data['description'],
+            'director' => $data['director'],
+            'release_year' => $data['release_year'],
+            'genre' => $data['genre']
+        ]);
     }
 
     /**
@@ -107,6 +119,10 @@ class MovieControllerTest extends TestCase
                     'id',
                     'title',
                     'description',
+                    'director',
+                    'release_year',
+                    'genre',
+                    'poster',
                     'created_at',
                     'updated_at',
                 ],
@@ -143,6 +159,10 @@ class MovieControllerTest extends TestCase
                         'id',
                         'title',
                         'description',
+                        'director',
+                        'release_year',
+                        'genre',
+                        'poster',
                         'created_at',
                         'updated_at',
                     ],

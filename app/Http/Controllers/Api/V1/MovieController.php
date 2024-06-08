@@ -31,14 +31,14 @@ class MovieController extends ApiController
     public function store(StoreMovieRequest $request)
     {
         try {
-            $movieData = $request->except('image');
+            $movieData = $request->except('poster');
             $movie = Movie::create($movieData);
 
-            if ($request->hasFile('image')) {
-                $newFileName = 'poster.' . $request->file('image')->extension();
+            if ($request->hasFile('poster')) {
+                $newFileName = 'poster.' . $request->file('poster')->extension();
 
                 $movie
-                    ->addMediaFromRequest('image')
+                    ->addMediaFromRequest('poster')
                     ->usingFileName($newFileName)
                     ->toMediaCollection('poster');
             }
@@ -76,13 +76,13 @@ class MovieController extends ApiController
     public function update(UpdateMovieRequest $request, $movieId)
     {
         try {
-            $movieData = $request->except('image');
+            $movieData = $request->except('poster');
 
             $movie = Movie::findOrFail($movieId);
             $movie->update($movieData);
 
-            if ($request->hasFile('image')) {
-                $movie->addMediaFromRequest('image')->toMediaCollection('poster');
+            if ($request->hasFile('poster')) {
+                $movie->addMediaFromRequest('poster')->toMediaCollection('poster');
             }
 
             return $this->successResponseWithData(
