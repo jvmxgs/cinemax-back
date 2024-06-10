@@ -22,6 +22,7 @@ class MovieResource extends JsonResource
             'release_year' => $this->release_year,
             'genre' => $this->genre,
             'poster' => $this->getFirstMediaUrl('poster'),
+            'time_slots' => TimeSlotResource::collection($this->whenLoaded('timeSlots')),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

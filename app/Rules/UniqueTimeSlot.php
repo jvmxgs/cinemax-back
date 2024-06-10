@@ -9,11 +9,13 @@ use Illuminate\Contracts\Validation\ValidationRule;
 
 class UniqueTimeSlot implements ValidationRule
 {
+    protected $timeSlotId;
     protected $interval;
 
-    public function __construct($interval = 20)
+    public function __construct($timeSlotId = null, $interval = 20)
     {
         $this->interval = $interval;
+        $this->timeSlotId = $timeSlotId;
     }
 
     /**
@@ -28,6 +30,9 @@ class UniqueTimeSlot implements ValidationRule
         $startTime = Carbon::createFromFormat('H:i:s', $parsedValue);
 
         $conflictingTimeSlot = TimeSlot::query()
+            ->when($this->timeSlotId, function ($query) {
+                $query->whereNot('id', $this->timeSlotId);
+            })
             ->where('start_time', '>=', $startTime->copy()->subMinutes($this->interval)->format('H:i:s'))
             ->where('start_time', '<=', $startTime->copy()->addMinutes($this->interval)->format('H:i:s'))
             ->exists();

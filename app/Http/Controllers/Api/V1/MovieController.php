@@ -16,7 +16,7 @@ class MovieController extends ApiController
     public function index()
     {
         try {
-            $moviesResource = MovieResource::collection(Movie::orderBy('created_at', 'desc')->paginate(10));
+            $moviesResource = MovieResource::collection(Movie::with('timeSlots')->orderBy('created_at', 'desc')->paginate(10));
             return $this->successResponseWithData(
                 'Movies retrieved successfully',
                 $moviesResource->response()->getData(true)
@@ -46,7 +46,7 @@ class MovieController extends ApiController
 
             return $this->successResponseWithData(
                 'Movie created successfully',
-                new MovieResource($movie),
+                new MovieResource($movie->load('timeSlots')),
                 201
             );
         } catch(\Exception $e) {
@@ -60,7 +60,7 @@ class MovieController extends ApiController
     public function show($movie)
     {
         try {
-            $movie = Movie::findOrFail($movie);
+            $movie = Movie::with('timeSlots')->findOrFail($movie);
 
             return $this->successResponseWithData(
                 'Movie retrieved successfully',
@@ -79,7 +79,7 @@ class MovieController extends ApiController
         try {
             $movieData = $request->except('poster');
 
-            $movie = Movie::findOrFail($movieId);
+            $movie = Movie::with('timeSlots')->findOrFail($movieId);
             $movie->update($movieData);
 
             if ($request->hasFile('poster')) {

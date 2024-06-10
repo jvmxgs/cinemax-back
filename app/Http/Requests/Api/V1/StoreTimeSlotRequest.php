@@ -17,6 +17,18 @@ class StoreTimeSlotRequest extends FormRequest
     }
 
     /**
+     * Prepare the data for validation.
+     */
+    protected function prepareForValidation(): void
+    {
+        if (is_numeric($this->movie_id)) {
+            $this->merge([
+                'movie_id' => $this->movie_id
+            ]);
+        }
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>

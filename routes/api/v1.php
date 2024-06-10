@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\BillboardController;
 use App\Http\Controllers\Api\V1\MovieController;
 use App\Http\Controllers\Api\V1\ShowtimeController;
 use App\Http\Controllers\Api\V1\TimeSlotController;
@@ -12,6 +13,7 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::post('login', [AuthController::class, 'login']);
+Route::get('billboard', [BillboardController::class, 'index']);
 
 Route::middleware('api', 'auth:sanctum')->group(function () {
     Route::resource('movies', MovieController::class);

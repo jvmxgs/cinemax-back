@@ -34,11 +34,11 @@ class TimeSlotController extends ApiController
     public function store(StoreTimeSlotRequest $request)
     {
         try {
-            $timeSlot = TimeSlot::with('movie')->create($request->validated());
+            $timeSlot = TimeSlot::create($request->validated());
 
             return $this->successResponseWithData(
                 'Time slot created successfully',
-                new TimeSlotResource($timeSlot),
+                new TimeSlotResource($timeSlot->load('movie')),
                 201
             );
         } catch(\Exception $e) {
