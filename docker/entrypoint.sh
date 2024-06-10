@@ -5,6 +5,7 @@
 if [ ! -f ".env" ]; then
     cp .env.example .env
     php artisan key:generate
+    php artisan storage:link
 fi
 
 migration_status=$(php artisan migrate:status)
