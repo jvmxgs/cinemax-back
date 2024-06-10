@@ -15,7 +15,9 @@ class ValidTimeSlot implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $time = Carbon::createFromFormat('H:i:s', $value);
+        $parsedValue = date('H:i:s', strtotime($value));
+
+        $time = Carbon::createFromFormat('H:i:s', $parsedValue);
 
         $startLimit = Carbon::createFromTime(9, 0, 0);  // 9:00 AM
         $endLimit = Carbon::createFromTime(23, 00, 00); // 11:00 PM

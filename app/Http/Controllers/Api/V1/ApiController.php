@@ -25,8 +25,20 @@ class ApiController extends Controller
             'message' => $message
         ];
 
-        if (! empty($data)) {
+        if (! empty($data) && !isset($data['data'])) {
             $responseData['data'] = $data;
+        }
+
+        if (! empty($data['data'])) {
+            $responseData['data'] = $data['data'];
+        }
+
+        if (! empty($data['links'])) {
+            $responseData['links'] = $data['links'];
+        }
+
+        if (! empty($data['meta'])) {
+            $responseData['meta'] = $data['meta'];
         }
 
         return response()->json($responseData, $statusCode);

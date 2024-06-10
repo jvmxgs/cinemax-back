@@ -25,8 +25,8 @@ class UpdateShowtimeRequest extends FormRequest
         $showtime_id = $this->route('showtime');
 
         return [
-            'movie_id' => 'exists:movies,id',
-            'time_slot_id' => 'exists:time_slots,id',
+            'movie_id' => 'exists:movies,id,deleted_at,NULL',
+            'time_slot_id' => 'exists:time_slots,id,deleted_at,NULL',
             'start_date' => 'date',
             'end_date' => ['date', 'after_or_equal:start_date', new ValidEndDateRange($showtime_id)],
         ];

@@ -26,7 +26,7 @@ class UpdateTimeSlotRequest extends FormRequest
         return [
             'start_time' => ['date_format:H:i:s', new ValidTimeSlot, new UniqueTimeSlot],
             'is_active' => 'boolean',
-            'movie_id' => 'exists:movies,id',
+            'movie_id' => 'exists:movies,id,deleted_at,NULL',
         ];
     }
 }

@@ -23,11 +23,11 @@ class StoreMovieRequest extends FormRequest
     {
         return [
             'title' => 'required|string|max:255',
-            'description' => 'required|nullable|string',
-            'director' => 'required|nullable|string|max:255',
-            'release_year' => 'required|nullable|integer|min:1800|max:' . (date('Y') + 1),
-            'genre' => 'required|nullable|string|max:255',
-            'poster' => 'required|nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'description' => 'required|string',
+            'director' => 'required|string|max:255',
+            'release_year' => 'required|integer|min:1800|max:' . (date('Y') + 1),
+            'genre' => 'required|string|max:255',
+            'poster' => 'required|image|mimes:jpg,jpeg,png|max:2048',
         ];
     }
 }

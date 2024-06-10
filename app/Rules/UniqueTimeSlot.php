@@ -11,7 +11,7 @@ class UniqueTimeSlot implements ValidationRule
 {
     protected $interval;
 
-    public function __construct($interval = 59)
+    public function __construct($interval = 20)
     {
         $this->interval = $interval;
     }
@@ -23,7 +23,9 @@ class UniqueTimeSlot implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $startTime = Carbon::createFromFormat('H:i:s', $value);
+        $parsedValue = date('H:i:s', strtotime($value));
+
+        $startTime = Carbon::createFromFormat('H:i:s', $parsedValue);
 
         $conflictingTimeSlot = TimeSlot::query()
             ->where('start_time', '>=', $startTime->copy()->subMinutes($this->interval)->format('H:i:s'))
@@ -31,7 +33,7 @@ class UniqueTimeSlot implements ValidationRule
             ->exists();
 
         if ($conflictingTimeSlot) {
-            $fail('The :attribute conflicts with an existing time slot or does not respect the minimum interval of 59 mins.');
+            $fail('The :attribute conflicts with an existing time slot or does not respect the minimum interval of 20 mins.');
         }
     }
 }

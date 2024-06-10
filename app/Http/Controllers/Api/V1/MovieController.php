@@ -16,9 +16,10 @@ class MovieController extends ApiController
     public function index()
     {
         try {
+            $moviesResource = MovieResource::collection(Movie::orderBy('created_at', 'desc')->paginate(10));
             return $this->successResponseWithData(
                 'Movies retrieved successfully',
-                MovieResource::collection(Movie::all())
+                $moviesResource->response()->getData(true)
             );
         } catch (\Exception $e) {
             return $this->handleException($e);

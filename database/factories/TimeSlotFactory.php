@@ -19,7 +19,8 @@ class TimeSlotFactory extends Factory
     {
         return [
             'start_time' => $this->faker->time(),
-            'is_active' => $this->faker->boolean(90)
+            'is_active' => $this->faker->boolean(90),
+            'movie_id' => Movie::factory()
         ];
     }
 }

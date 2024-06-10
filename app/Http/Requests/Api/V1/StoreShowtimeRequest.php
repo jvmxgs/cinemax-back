@@ -22,8 +22,8 @@ class StoreShowtimeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'movie_id' => 'required|exists:movies,id',
-            'time_slot_id' => 'required|exists:time_slots,id',
+            'movie_id' => 'required|exists:movies,id,deleted_at,NULL',
+            'time_slot_id' => 'required|exists:time_slots,id,deleted_at,NULL',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
         ];

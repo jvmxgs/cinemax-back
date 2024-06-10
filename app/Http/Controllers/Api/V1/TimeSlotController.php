@@ -15,9 +15,13 @@ class TimeSlotController extends ApiController
     public function index()
     {
         try {
+            $timeslotResouce = TimeSlotResource::collection(
+                TimeSlot::with('movie')->orderBy('created_at', 'desc')->paginate(10)
+            );
+
             return $this->successResponseWithData(
                 'Time slots retrieved successfully',
-                TimeSlotResource::collection(TimeSlot::get())
+                $timeslotResouce->response()->getData(true)
             );
         } catch (\Exception $e) {
             return $this->handleException($e);
@@ -30,7 +34,7 @@ class TimeSlotController extends ApiController
     public function store(StoreTimeSlotRequest $request)
     {
         try {
-            $timeSlot = TimeSlot::create($request->validated());
+            $timeSlot = TimeSlot::with('movie')->create($request->validated());
 
             return $this->successResponseWithData(
                 'Time slot created successfully',
@@ -48,7 +52,7 @@ class TimeSlotController extends ApiController
     public function show($timeSlotId)
     {
         try {
-            $timeSlot = TimeSlot::findOrFail($timeSlotId);
+            $timeSlot = TimeSlot::with('movie')->findOrFail($timeSlotId);
 
             return $this->successResponseWithData(
                 'Time slot retrieved successfully',
@@ -65,7 +69,7 @@ class TimeSlotController extends ApiController
     public function update(UpdateTimeSlotRequest $request, $timeSlotId)
     {
         try {
-            $timeSlot = TimeSlot::findOrFail($timeSlotId);
+            $timeSlot = TimeSlot::with('movie')->findOrFail($timeSlotId);
             $timeSlot->update($request->validated());
 
             return $this->successResponseWithData(

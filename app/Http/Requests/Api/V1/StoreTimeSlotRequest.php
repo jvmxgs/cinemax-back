@@ -26,7 +26,7 @@ class StoreTimeSlotRequest extends FormRequest
         return [
             'start_time' => ['required', 'date_format:H:i:s', new ValidTimeSlot, new UniqueTimeSlot],
             'is_active' => 'required|boolean',
-            'movie_id' => 'nullable|exists:movies,id',
+            'movie_id' => 'exists:movies,id,deleted_at,NULL',
         ];
     }
 }
