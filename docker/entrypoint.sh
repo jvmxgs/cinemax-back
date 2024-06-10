@@ -7,9 +7,14 @@ if [ ! -f ".env" ]; then
     php artisan key:generate
 fi
 
-if [ ! -z "$(php artisan migrate)" ]; then
-    echo "The database probably has data, seeds not executed "
+migration_status=$(php artisan migrate:status)
+
+if echo "$migration_status" | grep -q '^\s*[0-9]\+.*Ran'; then
+    echo "The database probably has data, seeds not executed"
 else
+    echo "Running migrations..."
+    php artisan migrate
+    echo "Seeding database..."
     php artisan db:seed
 fi
 

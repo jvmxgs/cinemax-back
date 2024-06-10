@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Movie;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 
 class MovieSeeder extends Seeder
 {
@@ -18,6 +19,10 @@ class MovieSeeder extends Seeder
         $this->command->info('Created sample movies.');
 
         $this->command->info('Adding images to movies...');
+
+        if (!Storage::exists('public/posters')) {
+            Storage::makeDirectory('public/posters');
+        }
 
         $movies->each(function (Movie $movie) {
             $randomImageUrl = config('services.random_image.url');
